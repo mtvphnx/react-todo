@@ -1,7 +1,12 @@
-import styles from './List.module.scss';
+import {Element} from "../../components";
+import './List.scss';
 
 export const List = () => {
     return (
-        <div>List</div>
+        <ul className="app-list list-group">
+            <Element/>
+            <Element/>
+            <Element/>
+        </ul>
     );
 }

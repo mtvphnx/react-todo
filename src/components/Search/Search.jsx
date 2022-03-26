@@ -1,7 +1,9 @@
-import styles from './Search.modue.scss';
+import './Search.scss';
 
 export const Search = () => {
     return (
-        <div>Search</div>
+        <input type="text"
+               className="form-control search-input"
+               placeholder="Найти сотрудника"/>
     );
 }
