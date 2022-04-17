@@ -7,14 +7,13 @@ export class App extends Component {
         super(props);
         this.state = {
             data: [
-                {name: 'Иванов Иван', salary: 900, increase: false, key: 0},
-                {name: 'Фёдоров Фёдор', salary: 800, increase: true, key: 1},
-                {name: 'Семёнов Семён', salary: 1200, increase: false, key: 2},
-                {name: 'Матвеев Матвей', salary: 900, increase: false, key: 3},
-                {name: 'Павел Павлов', salary: 600, increase: true, key: 4}
+                {name: 'Иванов Иван', salary: 900, star: false, increase: false, key: 0},
+                {name: 'Фёдоров Фёдор', salary: 800, star: false, increase: true, key: 1},
+                {name: 'Семёнов Семён', salary: 1200, star: false, increase: false, key: 2},
+                {name: 'Матвеев Матвей', salary: 900, star: false, increase: false, key: 3}
             ]
         }
-        this.max = this.state.data.length
+        this.max = this.state.data.length;
     }
 
     deleteElement = (id) => {
@@ -30,6 +29,7 @@ export class App extends Component {
             name: name,
             salary: +salary,
             increase: false,
+            star: false,
             key: this.max++
         }
 
@@ -40,19 +40,36 @@ export class App extends Component {
         })
     }
 
+    toggleProp = (key, prop) => {
+        this.setState(({data}) => {
+            const newData = data.map(item => {
+                if (item.key === key) {
+                    return {...item, [prop]: !item[prop]}
+                }
+                return item;
+            });
+
+            return {data: newData};
+        })
+    }
+
     render() {
         const {data} = this.state;
+        const increaseLength = data.filter(item => item.increase).length;
 
         return (
             <div className="app">
-                <Info />
+                <Info length={data.length} increase={increaseLength} />
 
                 <div className="search-panel">
                     <Search/>
                     <Filter/>
                 </div>
 
-                <List onDelete={this.deleteElement} data={data}/>
+                <List onDelete={this.deleteElement}
+                      data={data}
+                      toggleProp={this.toggleProp}
+                />
                 <Form onCreate={this.addElement} />
             </div>
         );

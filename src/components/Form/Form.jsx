@@ -31,7 +31,6 @@ export class Form extends Component {
 
     render() {
         const {name, salary} = this.state;
-        const {onCreate} = this.props;
 
         return (
             <div className="app-add-form">
