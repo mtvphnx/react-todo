@@ -1,9 +1,9 @@
 import {Element} from "../../components";
 import './List.scss';
 
-export const List = ({date}) => {
-    const elements = date.map(item => {
-            return <Element {...item}/>
+export const List = ({data, onDelete}) => {
+    const elements = data.map(item => {
+            return <Element {...item} onDelete={() => onDelete(item.key)}/>
         });
 
         return (
