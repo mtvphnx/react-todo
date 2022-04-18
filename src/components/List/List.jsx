@@ -7,11 +7,11 @@ export const List = ({data, onDelete, toggleProp}) => {
                         onDelete={() => onDelete(item.key)}
                         toggleProp={e => toggleProp(item.key, e.currentTarget.getAttribute('data-toggle'))}
                     />
-        });
+    });
 
-        return (
-            <ul className="app-list list-group">
-                {elements}
-            </ul>
-        );
+    return (
+        <ul className="app-list list-group">
+            {(data.length) !== 0 ? elements : <div className="error">Сотрудники не найдены</div>}
+        </ul>
+    );
 }

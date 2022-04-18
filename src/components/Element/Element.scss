@@ -10,15 +10,18 @@
 .list-group-item span {
   line-height: 35px;
   font-size: 20px;
-  cursor: pointer;
   min-width: 550px;
+  cursor: default;
+  user-select: none;
 }
 
-.list-group-item input {
+.list-group-item .value {
   line-height: 35px;
   font-size: 20px;
   text-align: center;
   border: 0;
+  cursor: default;
+  user-select: none;
 }
 
 .list-group-item button {
