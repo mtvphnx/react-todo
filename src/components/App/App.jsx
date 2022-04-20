@@ -3,61 +3,54 @@ import {Filter, Form, Info, List, Search} from "../../components/";
 import './App.scss';
 
 export class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: [
-                {name: 'Иванов Иван', salary: 1900, increase: false, key: 0},
-                {name: 'Фёдоров Фёдор', salary: 800, increase: true, key: 1},
-                {name: 'Семёнов Семён', salary: 1200, increase: false, key: 2},
-                {name: 'Матвеев Матвей', salary: 900, increase: false, key: 3},
-                {name: 'Артёмов Артём', salary: 500, increase: true, key: 4}
-            ],
-            text: '',
-            active: 'all'
-        }
-        this.max = this.state.data.length;
-    }
-
-    deleteElement = (id) => {
-        this.setState(({data}) => {
-            return {
-                data: data.filter(item => item.key !== id)
-            }
-        })
+    state = {
+        data: [
+            {name: 'Иванов Иван', salary: 1900, star: false, key: 0},
+            {name: 'Фёдоров Фёдор', salary: 800, star: true, key: 1},
+            {name: 'Семёнов Семён', salary: 1200, star: false, key: 2},
+            {name: 'Матвеев Матвей', salary: 900, star: false, key: 3},
+            {name: 'Артёмов Артём', salary: 500, star: true, key: 4}
+        ],
+        text: '',
+        active: 'all'
     }
 
     addElement = (name, salary) => {
-        const newElement = {
+        let key = this.state.data.length;
+
+        const element = {
             name: name,
             salary: +salary,
-            increase: false,
-            key: this.max++
+            star: false,
+            key: key++
         }
 
-        this.setState(({data}) => {
-            return {
-                data: [...data, newElement]
-            }
+        this.setState(({data}) => ({
+            data: [...data, element]
+        }))
+    }
+
+    starElement = (key) => {
+        this.setState(({data}) => ({
+            data: data.map(item => {
+                return (item.key === key) ? {...item, star: !item['star']} : item;
+            })
+        }))
+    }
+
+    deleteElement = (key) => {
+        this.setState(({data}) => ({
+            data: data.filter(item => item.key !== key)
+        }))
+    }
+
+    toggleState = (name, value) => {
+        this.setState({
+            [name]: value
         })
     }
 
-    toggleProp = (key, prop) => {
-        this.setState(({data}) => {
-            const newData = data.map(item => {
-                if (item.key === key) {
-                    return {...item, [prop]: !item[prop]}
-                }
-                return item;
-            });
-
-            return {
-                data: newData
-            };
-        })
-    }
-
-    searchElements = (data, text) => {
+    search = (data, text) => {
         if (text !== '') {
             return data.filter(item => {
                 let name = item.name.toLowerCase().trim();
@@ -68,47 +61,37 @@ export class App extends Component {
         }
     }
 
-    searchText = (text) => {
-        this.setState({
-            text: text
-        })
-    }
-
-    filter = (items, name) => {
+    filter = (data, name) => {
         switch (name) {
-            case 'increase':
-                return items.filter(item => item.increase);
+            case 'star':
+                return data.filter(item => item.star);
             case 'rich':
-                return items.filter(item => item.salary > 1000);
+                return data.filter(item => item.salary > 1000);
             default:
-                return items;
+                return data;
         }
-    }
-
-    checkoutFilter = (name) => {
-        this.setState({
-            active: name
-        })
     }
 
     render() {
         const {data, text, active} = this.state;
-        const increaseLength = data.filter(item => item.increase).length;
-        const filteredElements = this.searchElements(this.filter(data, active), text);
+        const result = this.search(this.filter(data, active), text);
 
         return (
             <div className="app">
-                <Info length={data.length} increase={increaseLength} />
+                <Info data={data}/>
 
                 <div className="search-panel">
-                    <Search onChange={this.searchText}/>
-                    <Filter checkoutFilter={this.checkoutFilter} active={active}/>
+                    <Search toggleState={this.toggleState}/>
+                    <Filter
+                        toggleState={this.toggleState}
+                        active={active}/>
                 </div>
 
-                <List onDelete={this.deleteElement}
-                      data={filteredElements}
-                      toggleProp={this.toggleProp}
-                />
+                <List
+                    onDelete={this.deleteElement}
+                    onStar={this.starElement}
+                    data={result} />
+
                 <Form onCreate={this.addElement} />
             </div>
         );

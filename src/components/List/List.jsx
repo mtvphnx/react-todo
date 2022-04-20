@@ -1,17 +1,21 @@
 import {Element} from "../../components";
 import './List.scss';
 
-export const List = ({data, onDelete, toggleProp}) => {
+export const List = ({data, onDelete, onStar}) => {
     const elements = data.map(item => {
-            return <Element {...item}
-                        onDelete={() => onDelete(item.key)}
-                        toggleProp={e => toggleProp(item.key, e.currentTarget.getAttribute('data-toggle'))}
-                    />
+            return (
+                <Element
+                    onDelete={() => onDelete(item.key)}
+                    onStar={() => onStar(item.key)}
+                    {...item} />
+            );
     });
+
+    const Error = () => <div className="error">Сотрудники не найдены</div>
 
     return (
         <ul className="app-list list-group">
-            {(data.length) !== 0 ? elements : <div className="error">Сотрудники не найдены</div>}
+            {data.length !== 0 ? elements : <Error/>}
         </ul>
     );
 }

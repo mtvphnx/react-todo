@@ -2,12 +2,9 @@ import {Component} from "react";
 import './Form.scss';
 
 export class Form extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            name: '',
-            salary: ''
-        }
+    state = {
+        name: '',
+        salary: ''
     }
 
     onChange = (e) => {
@@ -18,9 +15,10 @@ export class Form extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
+        const {name, salary} = this.state;
 
-        if (this.state.name !== '' && this.state.salary !== '') {
-            this.props.onCreate(this.state.name, this.state.salary);
+        if (name !== '' && salary !== '') {
+            this.props.onCreate(name, salary);
 
             this.setState({
                 name: '',
@@ -30,28 +28,34 @@ export class Form extends Component {
     }
 
     render() {
-        const {name, salary} = this.state;
+        const data = [
+            {key: 0, type: 'text', placeholder: 'Имя', name: 'name'},
+            {key: 1, type: 'number', placeholder: 'Зарплата', name: 'salary'}
+        ]
+
+        const inputs = data.map(item => {
+            const {key, type, placeholder, name} = item;
+
+            return (
+                <input
+                    type={type}
+                    key={key}
+                    name={name}
+                    className="form-control new-post-label"
+                    placeholder={placeholder}
+                    value={this.state[name]}
+                    onChange={this.onChange}/>
+            );
+        });
 
         return (
             <div className="app-add-form">
                 <h3>Добавьте нового сотрудника</h3>
-                <form className="add-form d-flex"
+                <form
+                    className="add-form d-flex"
                     onSubmit={e => this.onSubmit(e)}>
-                    <input type="text"
-                           className="form-control new-post-label"
-                           placeholder="Имя"
-                           name="name"
-                           value={name}
-                           onChange={this.onChange} />
-                    <input type="number"
-                           className="form-control new-post-label"
-                           placeholder="Зарплата"
-                           name="salary"
-                           value={salary}
-                           onChange={this.onChange}/>
-
-                    <button type="submit"
-                            className="btn btn-outline-light">Добавить</button>
+                    {inputs}
+                    <button type="submit" className="btn btn-outline-light">Добавить</button>
                 </form>
             </div>
         )
